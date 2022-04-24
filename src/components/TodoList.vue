@@ -39,12 +39,16 @@
           <div v-if="data.todoList_by_pk">{{ data.todoList_by_pk.title }}</div>
           <div v-else-if="data.todoList_by_pk == null && !data.todoList">{{ "Belum ada todo" }}</div>
           <div v-if="data.todoList">
-            <div v-for="todo in data.todoList" :key="todo.id">
+            <todo-list-item
+            v-for="(todo, index) in data.todoList" 
+            :key="index"
+            :data="todo"
+            :index="todo.id"
+            >
               {{ todo.title }}
-            </div>
+            </todo-list-item>
           </div>
         </div>
-
         <!-- No result -->
         <div v-else class="no-result apollo">No result :(</div>
       </template>
@@ -75,11 +79,14 @@
       >
         <template v-slot="{ mutate, loading, error }">
           <div class="form2">
+            <label for="todoTitle">Todo Title  : </label>
             <input type="text" v-model= "add" placeholder="todo-title" ><br>
+            <label for="todoStatus">Todo Status : </label>
             <select v-model="isDone" id="isDone">
               <option value="False">False</option>
               <option value="True">True</option>
             </select><br>
+            <label for="todoUser">Todo User : </label>
             <input type="text" v-model= "userId" placeholder="todo-user" ><br>
             <button :disabled="loading" @click="mutate()" value="tambah"> Add Todo </button>
           </div>
@@ -93,8 +100,10 @@
 
 <script>
 //import gql from 'graphql-tag'
+import TodoListItem from '@/components/TodoListItem.vue'
 
 export default {
+  components: { TodoListItem },
   // apollo:{
   //   todoList_by_pk:{
   //     query: gql`query MyQuery4($id: Int!) {
@@ -168,6 +177,14 @@ export default {
 </script>
 
 <style scoped>
+
+button{
+  tab-size: 2;
+}
+
+result apollo{
+  tab-size: 2px;
+}
 /* input{
   display: block;
   margin: auto;
