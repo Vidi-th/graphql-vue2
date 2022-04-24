@@ -8,8 +8,6 @@
         {{ todo.title }}
       </div> -->
 
-      <hr>
-
       <ApolloQuery 
       :query="search!=''?(gql => gql`
         query MyQuery4($id: Int!) {
@@ -55,12 +53,46 @@
       <!-- <div v-for="todo in todoListComputed" :key="todo.id">
         {{ todo.title }}
       </div> -->
+      <hr>
+
+      <ApolloMutation
+        :mutation="gql => gql`
+          mutation MyMutation($objects: [todoList_insert_input!] = {}) {
+             insert_todoList(objects: $objects) {
+               returning {
+                 title
+               }
+             }
+           }
+        `"
+        :variables="{
+          objects: [{
+            is_done: isDone,
+            title: add,
+            user_id: userId
+          }]
+        }"
+      >
+        <template v-slot="{ mutate, loading, error }">
+          <div class="form2">
+            <input type="text" v-model= "add" placeholder="todo-title" ><br>
+            <select v-model="isDone" id="isDone">
+              <option value="False">False</option>
+              <option value="True">True</option>
+            </select><br>
+            <input type="text" v-model= "userId" placeholder="todo-user" ><br>
+            <button :disabled="loading" @click="mutate()" value="tambah"> Add Todo </button>
+          </div>
+          
+          <p v-if="error">An error occurred: {{ error }}</p>
+        </template>
+      </ApolloMutation>
 
     </div>
 </template>
 
 <script>
-// import gql from 'graphql-tag'
+//import gql from 'graphql-tag'
 
 export default {
   // apollo:{
@@ -88,10 +120,33 @@ export default {
   // },
   
   data: () => ({
-    search: 1,
+    search: "",
+    add: "",
     todoList: {},
+    isDone:false,
+    userId:"",
   }),
 
+  methods:{
+      // async onAdd() {
+      //   const data = await this.$apollo.mutate({
+      //     mutation: gql`
+      //     mutation MyMutation($objects: [todoList_insert_input!] = {}) {
+      //       insert_todoList(objects: $objects) {
+      //         returning {
+      //           title
+      //         }
+      //       }
+      //     }`,
+
+      //     variables: [{
+      //         "is_done": true,
+      //         "title": "Belajar IoT",
+      //         "user_id": 1
+      //       }],
+      //   });
+      // }
+  },
   computed:{
     todoListComputed(){
       
