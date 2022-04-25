@@ -16,6 +16,7 @@
         id: index,
         title: inputEdit
       }"
+     
     >
       <template v-slot="{ mutate, error}">
       <!-- Error -->
@@ -43,6 +44,7 @@
       :variables="{
         id: index
       }"
+
     >
       <template v-slot="{ mutate, error}">
       <!-- Error -->
@@ -61,6 +63,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: "TodoListItem",
   data() {
@@ -87,9 +91,10 @@ export default {
       this.$emit("edit-list-baru", index, this.inputEdit);
       this.editList();
     },
+
   },
   computed:{
-    
+  
   }
 };
 </script>

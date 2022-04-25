@@ -52,11 +52,25 @@
         <!-- No result -->
         <div v-else class="no-result apollo">No result :(</div>
       </template>
+      <ApolloSubscribeToMore
+        :document="
+          (gql) => gql`
+            subscription MySubscription {
+              todoList{
+                title
+                id
+              }
+            }
+          `
+        "
+        :updateQuery="onUpdated"
+      />
     </ApolloQuery>
 
       <!-- <div v-for="todo in todoListComputed" :key="todo.id">
         {{ todo.title }}
       </div> -->
+      
       <hr>
 
       <ApolloMutation
@@ -155,6 +169,11 @@ export default {
       //       }],
       //   });
       // }
+      onUpdated(previousResult, { subscriptionData }) {
+      return {
+          todoList: subscriptionData.data.todoList
+      }
+    },
   },
   computed:{
     todoListComputed(){
